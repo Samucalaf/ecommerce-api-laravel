@@ -20,8 +20,9 @@ return new class extends Migration
             $table->string('neighborhood', 100);
             $table->string('city', 100);
             $table->string('federation_unit', 2);
-            $table->string('zip_code', 8);
+            $table->string('zip_code', 8)->index();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

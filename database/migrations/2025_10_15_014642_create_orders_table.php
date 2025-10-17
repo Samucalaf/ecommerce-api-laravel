@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2);
             $table->string('status')->default('pending'); // pending, paid, shipped, delivered, cancelled
             $table->string('payment_method')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
