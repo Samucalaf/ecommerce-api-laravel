@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\CartsItems;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Product extends Model
 {
     use SoftDeletes;
+    use HasSlug;
+
     protected $fillable = [
         'name',
         'description',
@@ -18,6 +22,18 @@ class Product extends Model
         'stock',
         'category_id',
     ];
+
+    protected $casts = [
+        'images' => 'array',
+        'specifications' => 'array',
+    ];
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug');
+    }
+
 
     public function category(): BelongsTo
     {
@@ -29,7 +45,7 @@ class Product extends Model
         return $this->hasMany(CartsItem::class);
     }
 
-    public function orderItems(): HasMany   
+    public function orderItems(): HasMany
     {
         return $this->hasMany(OrdersItem::class);
     }
