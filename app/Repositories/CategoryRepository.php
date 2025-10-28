@@ -15,7 +15,7 @@ class CategoryRepository
 
     public function paginateWithRelations($perPage = 10)
     {
-        return $this->model->with('products')->paginate($perPage);
+        return $this->model->with('products')->orderBy('name')->paginate($perPage);
     }
 
     public function create(array $data)
@@ -27,6 +27,17 @@ class CategoryRepository
     {
         return $this->model->find($id);
     }
+
+    public function findByName($name)
+    {
+        return $this->model::where('name', $name)->first();
+    }
+
+    public function findBySlug($slug)
+    {
+        return $this->model::where('slug', $slug)->first();
+    }
+
     public function update(Category $category, array $data)
     {
         $category->update($data);
@@ -36,10 +47,7 @@ class CategoryRepository
     public function delete(string $id)
     {
         $category = $this->findById($id);
-        if (!$category) {
-            return null;
-        }
-        return $category->delete();
+        return $category?->delete();
     }
 
     public function allActive()
