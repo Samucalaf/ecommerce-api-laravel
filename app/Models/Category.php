@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\SlugOptions;   
+use App\Policies\CategoryPolicy;
 
 
 class Category extends Model
@@ -19,6 +20,7 @@ class Category extends Model
 
     protected $casts = [
         'description' => 'array',
+        'is_active' => 'boolean',
     ];
     public function getSlugOptions(): SlugOptions
     {
