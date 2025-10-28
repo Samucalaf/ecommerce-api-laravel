@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 
 
 Route::prefix('auth')->group(function () { 
@@ -11,6 +12,9 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('categories', CategoryController::class);
+});
 
 
 Route::prefix('admin')->group(function () {
