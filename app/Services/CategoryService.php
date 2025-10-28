@@ -16,13 +16,13 @@ class CategoryService
         $this->categoryRepository = $categoryRepository;
     }
 
-    
+
 
     public function listCategories($perPage = 10)
     {
         try {
             $categories = $this->categoryRepository->paginateWithRelations($perPage);
-            return $categories->sortBy('name');
+            return $categories;
         } catch (\Exception $e) {
             Log::error('Category listing failed: ' . $e->getMessage());
             throw $e;
@@ -42,9 +42,10 @@ class CategoryService
     public function createCategory(array $data)
     {
         try {
+            $existingCategory = $this->categoryRepository->findByName($data['name']);
 
-            if (!$data) {
-                throw new \InvalidArgumentException('Invalid data provided for category creation');
+            if ($existingCategory) {
+                throw new \InvalidArgumentException('The category exists');
             }
 
             return $this->categoryRepository->create($data);
@@ -57,10 +58,18 @@ class CategoryService
     public function updateCategory(Category $category, array $data)
     {
         try {
+            $existingCategory = $this->categoryRepository->findByName($data['name']);
+            $existingCategoryBySlug = $this->categoryRepository->findBySlug($data['slug']);
 
-            if (!$data) {
-                throw new \InvalidArgumentException('Invalid data provided for category update');
+            if ($existingCategory) {
+                throw new \InvalidArgumentException('The category name exists');
             }
+
+            if ($existingCategoryBySlug) {
+                throw new \InvalidArgumentException('The category slug exists');
+            }
+
+
 
             return $this->categoryRepository->update($category, $data);
         } catch (\Exception $e) {
@@ -86,15 +95,20 @@ class CategoryService
     public function deleteCategory(string $id)
     {
         try {
-            if (!$id) {
-                return response()->json(['message' => 'Invalid category ID provided for deletion'], 400);
+            $category = $this->categoryRepository->findById($id);
+
+            if (!$category) {
+                return response()->json(['message' => 'Category does not exist'], 400);
+            }
+
+            if ($category->products()->count() > 0) {
+                throw new \DomainException(
+                    'not possible delete this category, because there are products associate'
+                );
             }
 
             $deleted = $this->categoryRepository->delete($id);
 
-            if (!$deleted) {
-                throw new \Exception('Category not found for deletion');
-            }
             return true;
         } catch (\Exception $e) {
             Log::error('Category deletion failed: ' . $e->getMessage());
