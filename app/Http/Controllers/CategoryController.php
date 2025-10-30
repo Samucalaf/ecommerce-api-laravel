@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class CategoryController extends Controller
     }
     public function index(Request $request)
     {
-        if (isset($request->active) && $request->active) {
+        if ($request->has('active') && filter_var($request->active, FILTER_VALIDATE_BOOLEAN)) {
             $categories = $this->categoryService->filterActiveCategories();
             return CategoryResource::collection($categories);
         }
@@ -57,7 +57,7 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateCategoryRequest $request, Category $category)
-    {   
+    {
         $category = $this->categoryService->updateCategory($category, $request->all());
         return new CategoryResource($category);
     }
@@ -67,11 +67,16 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-            $category = $this->categoryService->deleteCategory($id);
+        $category = $this->categoryService->deleteCategory($id);
 
+        if ($category === true) {
             return response()->json([
                 'message' => 'Category deleted successfully',
-                'category' => $category
             ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Category not found or could not be deleted'
+        ], 404);
     }
 }
