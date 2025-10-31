@@ -22,6 +22,12 @@ class ProductController extends Controller
     }
     public function index(Request $request)
     {
+        $searchTerm = $request->query('search');
+    
+        if ($searchTerm) {
+            $products = $this->productService->searchProducts($searchTerm);
+            return ProductResource::collection($products);
+        }
         $filters = $request->only(['category_id', 'min_price', 'max_price']);
         $products = $this->productService->listProducts($filters, $request->get('per_page', 15));
         return ProductResource::collection($products);
