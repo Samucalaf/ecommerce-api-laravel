@@ -52,6 +52,6 @@ class CategoryRepository
 
     public function allActive()
     {
-        return $this->model->where('is_active', true)->get();
+        return $this->model->where('is_active', true)->with('products')->get();
     }
 }
