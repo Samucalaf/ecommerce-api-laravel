@@ -25,6 +25,20 @@ class ProductService
         }
     }
 
+    public function searchProducts(string $term)
+    {
+        try {
+            $term = trim($term);
+            if (empty($term)) {
+                return [];
+            }
+
+            return $this->productRepository->search($term);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
     public function createProduct(array $data)
     {
         try {
@@ -56,7 +70,11 @@ class ProductService
     public function getProductById($id)
     {
         try {
-            return $this->productRepository->findById($id);
+            $product = $this->productRepository->findById($id);
+            if (!$product) {
+                throw new \Exception("Product not found");
+            }
+            return $product;
         } catch (\Exception $e) {
             throw $e;
         }
