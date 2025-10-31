@@ -22,6 +22,7 @@ class ProductController extends Controller
     }
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Product::class);
         $searchTerm = $request->query('search');
     
         if ($searchTerm) {
@@ -38,6 +39,7 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
+        $this->authorize('create', Product::class);
         $product = $this->productService->createProduct($request->validated());
 
         return new ProductResource($product);
@@ -46,9 +48,9 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        $product = $this->productService->getProductById($id);
+        $this->authorize('view', $product);
         return new ProductResource($product);
     }
 
@@ -57,6 +59,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
+        $this->authorize('update', $product);
         $updatedProduct = $this->productService->updateProduct($product->id, $request->validated());
         return new ProductResource($updatedProduct);
     }
@@ -66,7 +69,7 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-
+        $this->authorize('delete', Product::class);
         $product = $this->productService->deleteProduct($id);
         
         if ($product === false) {

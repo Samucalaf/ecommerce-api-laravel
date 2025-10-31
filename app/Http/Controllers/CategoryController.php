@@ -25,6 +25,7 @@ class CategoryController extends Controller
     }
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Category::class);
         if ($request->has('active') && filter_var($request->active, FILTER_VALIDATE_BOOLEAN)) {
             $categories = $this->categoryService->filterActiveCategories();
             return CategoryResource::collection($categories);
@@ -40,6 +41,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
+        $this->authorize('create', Category::class);
         $category = $this->categoryService->createCategory($request->validated());
 
         return new CategoryResource($category);
@@ -47,9 +49,9 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Category $category)
     {
-        $category = $this->categoryService->showCategory($id);
+        $this->authorize('view', $category);
         return new CategoryResource($category);
     }
 
@@ -58,6 +60,7 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        $this->authorize('update', $category);  
         $category = $this->categoryService->updateCategory($category, $request->all());
         return new CategoryResource($category);
     }
@@ -67,6 +70,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('delete', Category::class);    
         $category = $this->categoryService->deleteCategory($id);
 
         if ($category === true) {
