@@ -18,13 +18,18 @@ class CategoryService
 
 
 
+    /**
+     * List categories with pagination.
+     *
+     * @param int $perPage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function listCategories($perPage = 10)
     {
         try {
-            $categories = $this->categoryRepository->paginateWithRelations($perPage);
-            return $categories;
+            return $this->categoryRepository->paginateWithRelations($perPage);
         } catch (\Exception $e) {
-            Log::error('Category listing failed: ' . $e->getMessage());
+            Log::error('Category listing failed for perPage=' . $perPage . ': ' . $e->getMessage());
             throw $e;
         }
     }
@@ -34,7 +39,7 @@ class CategoryService
         try {
             return $this->categoryRepository->allActive();
         } catch (\Exception $e) {
-            Log::error('Filtering active categories failed: ' . $e->getMessage());
+            Log::error('Filtering active categories failed', ['error' => $e->getMessage()]);
             throw $e;
         }
     }
@@ -45,32 +50,32 @@ class CategoryService
             $existingCategory = $this->categoryRepository->findByName($data['name']);
 
             if ($existingCategory) {
-                throw new \InvalidArgumentException('The category exists');
+                throw new \InvalidArgumentException('The category with this name already exists');
             }
 
             return $this->categoryRepository->create($data);
         } catch (\Exception $e) {
             Log::error('Category creation failed: ' . $e->getMessage());
-            throw $e;
+            throw new \Exception('Failed to create category.');
         }
     }
 
     public function updateCategory(Category $category, array $data)
     {
         try {
-            $existingCategory = $this->categoryRepository->findByName($data['name']);
-            $existingCategoryBySlug = $this->categoryRepository->findBySlug($data['slug']);
-
-            if ($existingCategory) {
-                throw new \InvalidArgumentException('The category name exists');
+            if (isset($data['name']) && $data['name'] !== $category->name) {
+                $existingCategory = $this->categoryRepository->findByName($data['name']);
+                if ($existingCategory) {
+                    throw new \InvalidArgumentException('Category name already exists.');
+                }
             }
 
-            if ($existingCategoryBySlug) {
-                throw new \InvalidArgumentException('The category slug exists');
+            if (isset($data['slug']) && $data['slug'] !== $category->slug) {
+                $existingCategoryBySlug = $this->categoryRepository->findBySlug($data['slug']);
+                if ($existingCategoryBySlug) {
+                    throw new \InvalidArgumentException('Category slug already exists.');
+                }
             }
-
-
-
             return $this->categoryRepository->update($category, $data);
         } catch (\Exception $e) {
             Log::error('Category update failed: ' . $e->getMessage());
@@ -87,7 +92,7 @@ class CategoryService
             }
             return $category;
         } catch (\Exception $e) {
-            Log::error('Category retrieval failed: ' . $e->getMessage());
+            Log::warning('Category retrieval failed', ['id' => $id, 'error' => $e->getMessage()]);
             throw $e;
         }
     }
@@ -98,17 +103,16 @@ class CategoryService
             $category = $this->categoryRepository->findById($id);
 
             if (!$category) {
-                return response()->json(['message' => 'Category does not exist'], 400);
+                return false;
             }
 
             if ($category->products()->count() > 0) {
                 throw new \DomainException(
-                    'not possible delete this category, because there are products associate'
+                    'Cannot delete category with associated products'
                 );
             }
 
-            $deleted = $this->categoryRepository->delete($id);
-
+            $this->categoryRepository->delete($id);
             return true;
         } catch (\Exception $e) {
             Log::error('Category deletion failed: ' . $e->getMessage());
