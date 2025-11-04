@@ -13,11 +13,21 @@ class Cart extends Model
         'product_id',
         'quantity',
     ];
+
+    public function calculateTotal()
+    {
+        $total = 0;
+        foreach ($this->items as $item) {
+            $total += $item->product->price * $item->quantity;
+        }
+        return $total;
+    }
     public function items(): HasMany
     {
-        return $this->hasMany(CartsItem::class);
+        return $this->hasMany(CartItem::class);
     }
-    public function user(): BelongsTo  
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
