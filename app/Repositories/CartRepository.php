@@ -18,24 +18,27 @@ class CartRepository
      * Retrieve the cart for a specific user along with its products and calculate the total.
      *
      * @param int $idUser The ID of the user whose cart is to be retrieved.
-     * @return mixed The cart with calculated total, or null if not found.
+     * @return mixed The cart with calculated total and status, or null if not found.
      */
     public function getCartByUserId($idUser)
     {
-        $cart = $this->model->with('items.product')->where('user_id', $idUser)->first();
+        $cart = $this->model
+        ->with(['items.product'])
+        ->where('user_id', $idUser)
+        ->where('status', 'active')
+        ->first();
 
-        if ($cart) {
-            $cart->calculateTotal = $cart->calculateTotal();
-            return $cart;
-        }
-
-        return null;
+        
+        return $cart;
     }
 
 
     public function clearCart($userId)
     {
-        $cart = $this->model->where('user_id', $userId)->first();
+        $cart = $this->model
+        ->where('user_id', $userId)
+        ->where('status', 'active')
+        ->first();
         if ($cart) {
             $cart->items()->delete();
         }
