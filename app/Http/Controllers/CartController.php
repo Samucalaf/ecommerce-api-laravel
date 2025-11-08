@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CartResource;
 use Illuminate\Http\Request;
 use App\Services\CartService;
 class CartController extends Controller
@@ -19,7 +20,7 @@ class CartController extends Controller
     {
         $userId = $request->user()->id;
         $cart = $this->cartService->showCartUser($userId);
-        return response()->json($cart);
+        return new CartResource($cart);
     }
 
     public function clear(Request $request)
