@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Carts\StoreCartItemRequest;
+use App\Http\Requests\Carts\UpdateCartItemRequest;
 use Illuminate\Http\Request;
 use App\Services\CartItemService;
+use App\Http\Resources\ProductInCartResource;
+
 
 class CartItemController extends Controller
 {
@@ -14,32 +18,36 @@ class CartItemController extends Controller
         $this->cartItemService = $cartItemService;
     }
 
-    public function store(Request $request, $productId, $quantity = 1)
+    public function store(StoreCartItemRequest $request, $productId)
     {
         $userId = $request->user()->id;
         $quantity = $request->input('quantity', 1);
 
         try {
             $item = $this->cartItemService->addProductToCart($userId, $productId, $quantity);
-            return response()->json(['message' => 'Product added to cart successfully', 'item' => $item], 201);
+            return response()->json([
+                'message' => 'Product added to cart successfully',
+                'item' => new ProductInCartResource($item)
+            ], 201);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 
-    public function update(Request $request, $productId)
+    public function update(UpdateCartItemRequest $request, $productId)
     {
         $userId = $request->user()->id;
         $quantity = $request->input('quantity');
-        
+
         try {
             $item = $this->cartItemService->updateProductInCart($userId, $productId, $quantity);
-            return response()->json(['message' => 'Cart item updated successfully', 'item' => $item], 200);
+            return response()->json([
+                'message' => 'Cart item updated successfully',
+                'item' => new ProductInCartResource($item)
+            ], 200);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 
     public function destroy(Request $request, $productId)
@@ -48,10 +56,12 @@ class CartItemController extends Controller
 
         try {
             $item = $this->cartItemService->removeProductFromCart($userId, $productId);
-            return response()->json(['message' => 'Product removed from cart successfully', 'item' => $item], 200);
+            return response()->json([
+                'message' => 'Product removed from cart successfully',
+                'item' => new ProductInCartResource($item)
+            ], 200);
         } catch (\InvalidArgumentException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
-
     }
 }
