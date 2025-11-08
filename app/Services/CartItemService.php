@@ -27,13 +27,6 @@ class CartItemService
             throw new \InvalidArgumentException("Insufficient stock for the product.");
         }
 
-        if (!is_int($quantity)) {
-            throw new \InvalidArgumentException("Quantity must be an integer.");
-        }
-        if ($quantity <= 0) {
-            throw new \InvalidArgumentException("Quantity must be greater than zero.");
-        }
-
         return $this->cartItemRepository->postProductToCart($idUser, $productId, $quantity);
     }
 
@@ -48,9 +41,6 @@ class CartItemService
             throw new \InvalidArgumentException("Product is inactive.");
         }
 
-        if ($quantity <= 0) {
-            return $this->cartItemRepository->removeProduct($userId, $product);
-        }
         if ($product->stock < $quantity) {
             throw new \InvalidArgumentException("Insufficient stock for the product.");
         }
