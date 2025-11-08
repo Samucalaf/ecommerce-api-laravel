@@ -2,50 +2,68 @@
 
 namespace App\Repositories;
 
-use App\Models\CartItem;
+use App\Models\Cart;
+use App\Models\Product;
 
 class CartItemRepository
 {
+    protected $cartModel;
 
-    protected $model;
-    public function __construct(CartItem $cartItem)
+    public function __construct(Cart $cart)
     {
-        $this->model = $cartItem;
+        $this->cartModel = $cart;
     }
 
     public function postProductToCart($idUser, $productId, $quantity)
     {
-        $cart = $this->model->firstOrCreate(
-            ['user_id' => $idUser],
-        );
+        $product = Product::find($productId);
+        $cart = Cart::findOrCreateActiveCart($idUser);
+
 
         $item = $cart->items()->updateOrCreate(
             ['product_id' => $productId],
-            ['quantity' => $quantity]
+            [
+                'quantity' => $quantity,
+                'price' => $product->price
+            ]
         );
-        $cart->load('items.product');
-        $cart->calculateTotal = $cart->calculateTotal();
+
         return $item;
     }
 
-    public function updateProduct($userId, $productId, $quantity)
+    public function updateProduct($userId, $product, $quantity)
     {
-        $item = $this->model->items()->where('product_id', $productId)->first();
+        $cart = Cart::findOrCreateActiveCart($userId);
+
+        if (!$cart) {
+            return null;
+        }
+
+
+        $item = $cart->items()->where('product_id', $product->id)->first();
+
         if ($item) {
             $item->quantity = $quantity;
             $item->save();
         }
+
         return $item;
     }
 
-    public function removeProduct($userId, $productId)
+    public function removeProduct($userId, $product)
     {
+        $cart = Cart::findOrCreateActiveCart($userId);
 
-        $item = $this->model->items()->where('product_id', $productId)->first();
+        if (!$cart) {
+            return null;
+        }
+
+        $item = $cart->items()->where('product_id', $product->id)->first();
+
         if ($item) {
             $item->delete();
         }
+
         return $item;
     }
-    
 }
