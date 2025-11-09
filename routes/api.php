@@ -4,7 +4,9 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
-use \App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CartItemController;
 
 
 Route::prefix('auth')->group(function () { 
@@ -16,6 +18,15 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
+
+
+    Route::get('cart', [CartController::class, 'index']);
+    Route::delete('cart', [CartController::class, 'clear']);
+
+
+    Route::post('cart/items/{productId}', [CartItemController::class, 'store']);
+    Route::put('cart/items/{productId}', [CartItemController::class, 'update']);
+    Route::delete('cart/items/{productId}', [CartItemController::class, 'destroy']);
 });
 
 
