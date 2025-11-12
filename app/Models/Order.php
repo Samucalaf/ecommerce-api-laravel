@@ -17,6 +17,10 @@ class Order extends Model
         'status',
     ];
 
+    public function generateUniqueOrderNumber(){
+        return 'ORD-' . strtoupper(uniqid());
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(OrdersItem::class);
