@@ -52,7 +52,7 @@ class StoreAddresseRequest extends FormRequest
                 "string",
                 "max:255"
             ],
-            "federative_unit" => [
+            "federation_unit" => [
                 "required",
                 "string",
                 "size:2"
@@ -61,6 +61,10 @@ class StoreAddresseRequest extends FormRequest
                 "required",
                 "string",
                 "max:20"
+            ],
+            "user_id" => [
+                "required",
+                "exists:users,id"
             ],
         ];
     }

@@ -7,7 +7,7 @@ use App\Http\Requests\Addresse\UpdateAddresseRequest;
 use App\Http\Resources\AddressResource;
 use App\Http\Resources\AddressCompleteResource;
 use Illuminate\Http\Request;
-use App\Services\AddresseService;
+use App\Services\AddressService;
 
 class AddressController extends Controller
 {
@@ -15,17 +15,17 @@ class AddressController extends Controller
      * Display a listing of the resource.
      */
 
-    protected $addresseService;
+    protected $addressService;
 
-    public function __construct(AddresseService $addresseService)
+    public function __construct(AddressService $addresseService)
     {
-        $this->addresseService = $addresseService;
+        $this->addressService = $addresseService;
     }
     
     public function index(Request $request)
     {
         $user = $request->user();
-        $addresses = $this->addresseService->listUserAddresses($user->id);
+        $addresses = $this->addressService->listUserAddresses($user->id);
         
         return response()->json([
             'data' => AddressResource::collection($addresses)
@@ -38,7 +38,7 @@ class AddressController extends Controller
     public function store(StoreAddresseRequest $request)
     {
         $dataValidated = $request->validated();
-        $address = $this->addresseService->createAddress($dataValidated);
+        $address = $this->addressService->createAddress($dataValidated);
         
         return response()->json([
             'message' => 'Address created successfully',
@@ -52,7 +52,7 @@ class AddressController extends Controller
     public function show(Request $request, string $id)
     {
         $userId = $request->user()->id;
-        $address = $this->addresseService->getAddressById($userId, $id);
+        $address = $this->addressService->getAddressById($userId, $id);
         
         return response()->json([
             'data' => new AddressCompleteResource($address)
@@ -65,7 +65,7 @@ class AddressController extends Controller
     public function update(UpdateAddresseRequest $request, string $id)
     {
         $dataValidated = $request->validated();
-        $address = $this->addresseService->updateAddress($id, $dataValidated);
+        $address = $this->addressService->updateAddress($id, $dataValidated);
         
         return response()->json([
             'message' => 'Address updated successfully',
@@ -79,7 +79,7 @@ class AddressController extends Controller
     public function destroy(Request $request, string $id)
     {
         $userId = $request->user()->id;
-        $this->addresseService->deleteAddress($userId, $id);
+        $this->addressService->deleteAddress($userId, $id);
         
         return response()->json([
             'message' => 'Address deleted successfully'
