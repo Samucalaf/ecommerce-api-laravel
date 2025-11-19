@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Addresse\StoreAddresseRequest;
-use App\Http\Requests\Addresse\UpdateAddresseRequest;
+use App\Http\Requests\Address\StoreAddressRequest;
+use App\Http\Requests\Address\UpdateAddressRequest;
 use App\Http\Resources\AddressResource;
 use App\Http\Resources\AddressCompleteResource;
 use Illuminate\Http\Request;
@@ -35,9 +35,10 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAddresseRequest $request)
+    public function store(StoreAddressRequest $request)
     {
         $dataValidated = $request->validated();
+        $dataValidated['user_id'] = $request->user()->id;
         $address = $this->addressService->createAddress($dataValidated);
         
         return response()->json([
@@ -62,7 +63,7 @@ class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAddresseRequest $request, string $id)
+    public function update(UpdateAddressRequest $request, string $id)
     {
         $dataValidated = $request->validated();
         $address = $this->addressService->updateAddress($id, $dataValidated);

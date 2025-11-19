@@ -52,7 +52,7 @@ class User extends Authenticatable
     }
 
     public function address(): HasOne{
-        return $this->hasOne(Addresse::class);
+        return $this->hasOne(Address::class);
     }
 
     public function orders()
