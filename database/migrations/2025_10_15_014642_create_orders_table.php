@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('cart_id')->nullable()->constrained('carts')->onDelete('set null');
+            $table->foreignId('address_id')->constrained()->onDelete('cascade');
             $table->decimal('total', 10, 2);
-            $table->string('status')->default('pending'); // pending, paid, shipped, delivered, cancelled
+            $table->string('status')->default('pending'); 
             $table->string('payment_method')->nullable();
             $table->softDeletes();
             $table->timestamps();
