@@ -5,8 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Order;
 use App\Policies\CategoryPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\OrderPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Category::class => CategoryPolicy::class,
         Product::class => ProductPolicy::class,
+        Order::class => OrderPolicy::class,
     ];
 
     /**
