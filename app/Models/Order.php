@@ -17,6 +17,7 @@ class Order extends Model
         'address_id',
         'total',
         'status',
+        'order_number',
     ];
 
     public function generateUniqueOrderNumber(){
