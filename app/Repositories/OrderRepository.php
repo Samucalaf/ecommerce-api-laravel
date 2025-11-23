@@ -3,11 +3,10 @@
 
 namespace App\Repositories;
 
-use App\Mail\OrderCreate;
 use App\Models\Order;
 use App\Models\Cart;
-use Illuminate\Support\Facades\Mail;
 use App\Events\OrderCreated;
+use App\Models\Product;
 
 class OrderRepository
 {
@@ -47,6 +46,12 @@ class OrderRepository
                 'price' => $item->price,
             ]);
         }
+
+        foreach ($cart->items as $item) {
+            $product = new Product();
+            $product->decrementStockProduct($item->product_id, $item->quantity);
+        }
+        
 
         event(new OrderCreated($order, $cart));
 
