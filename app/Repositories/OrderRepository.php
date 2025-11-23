@@ -3,10 +3,11 @@
 
 namespace App\Repositories;
 
-use App\Http\Resources\OrderResource;
+use App\Mail\OrderCreate;
 use App\Models\Order;
 use App\Models\Cart;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
+use App\Events\OrderCreated;
 
 class OrderRepository
 {
@@ -46,6 +47,8 @@ class OrderRepository
                 'price' => $item->price,
             ]);
         }
+
+        event(new OrderCreated($order, $cart));
 
         $cart->items()->delete();
 

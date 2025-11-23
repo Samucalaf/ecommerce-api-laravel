@@ -29,7 +29,7 @@ class OrderController extends Controller
         $userId = $request->user()->id;
         $order = $this->orderService->listUserOrders($userId);
 
-        return response()->json(OrderResource::collection($order), 200);
+        return response()->json(new OrderResource($order), 200);
     }
 
     /**
@@ -46,7 +46,7 @@ class OrderController extends Controller
 
         $order = $this->orderService->createUserOrder($cart, $addressId);
 
-        return response()->json(OrderCompleteResource::collection($order), 201);
+        return response()->json(new OrderCompleteResource($order), 201);
     }
 
     /**
