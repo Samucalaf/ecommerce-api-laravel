@@ -7,7 +7,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
-
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\OrderController;
 
 Route::prefix('auth')->group(function () { 
     Route::post('/register', [AuthController::class, 'register']);
@@ -18,7 +19,8 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
-
+    Route::apiResource('address', AddressController::class);
+    Route::apiResource('orders', OrderController::class);
 
     Route::get('cart', [CartController::class, 'index']);
     Route::delete('cart', [CartController::class, 'clear']);

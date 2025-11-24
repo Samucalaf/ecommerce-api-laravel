@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsTouser;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use SebastianBergmann\CodeCoverage\Node\Builder;
 
-class Addresse extends Model
+class Address extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, HasFactory, BelongsTouser;
     protected $fillable = [
         'user_id',
         'owner',
@@ -21,6 +24,7 @@ class Addresse extends Model
         'city',
         'federation_unit',
         'zip_code',
+        'user_id',
     ];
 
     public function user(): BelongsTo
