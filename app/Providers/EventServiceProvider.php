@@ -13,10 +13,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+
         \App\Events\OrderCreated::class => [
             \App\Listeners\EmailUsersAboutOrderCreated::class,
-            \App\Listeners\LogOrdersCreated::class,
             \App\Listeners\UpdateStock::class,
+        ],
+
+        \App\Events\WelcomeToNewUser::class => [
+            \App\Listeners\EmailAboutNewUserCreated::class,
         ],
     ];
 
