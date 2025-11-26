@@ -47,11 +47,7 @@ class OrderRepository
             ]);
         }
 
-        foreach ($cart->items as $item) {
-            $product = new Product();
-            $product->decrementStockProduct($item->product_id, $item->quantity);
-        }
-        
+
 
         event(new OrderCreated($order, $cart));
 

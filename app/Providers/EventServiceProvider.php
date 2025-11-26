@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\App;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,7 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\OrderCreated::class => [
             \App\Listeners\EmailUsersAboutOrderCreated::class,
             \App\Listeners\LogOrdersCreated::class,
+            \App\Listeners\UpdateStock::class,
         ],
     ];
 
