@@ -8,13 +8,7 @@ use App\Mail\WelcomeUser;
 use Illuminate\Support\Facades\Mail;
 class EmailAboutNewUserCreated implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
+
 
     /**
      * Handle the event.
@@ -25,6 +19,6 @@ class EmailAboutNewUserCreated implements ShouldQueue
 
         $email = new WelcomeUser($user);
 
-        Mail::to($user->email)->later(now()->addSeconds(5), $email);
+        Mail::to($user->email)->later(now()->addSeconds(15), $email);
     }
 }

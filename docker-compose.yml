@@ -55,6 +55,14 @@ services:
     networks:
       - ecommerce-network
 
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - ecommerce-network
+
 networks:
   ecommerce-network:
     driver: bridge
