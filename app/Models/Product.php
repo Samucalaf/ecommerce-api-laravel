@@ -39,11 +39,6 @@ class Product extends Model
             ->saveSlugsTo('slug');
     }
 
-    public function decrementStockProduct (int $productId, int $quantity){
-
-        return $this->where('id', $productId)->decrement('stock', $quantity);
-    }
-
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
