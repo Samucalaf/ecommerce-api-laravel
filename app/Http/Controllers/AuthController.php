@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
+use App\Events\WelcomeToNewUser;
 
 class AuthController extends Controller
 {
@@ -36,6 +38,7 @@ class AuthController extends Controller
             $token = $user->createToken('auth_token')->plainTextToken;
 
 
+            event( new WelcomeToNewUser($user));
 
             return new UserResource($user, $token);
         } catch (\Exception $e) {

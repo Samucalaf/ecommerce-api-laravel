@@ -7,13 +7,7 @@ use App\Mail\OrderCreate;
 use Illuminate\Support\Facades\Mail;
 class EmailUsersAboutOrderCreated implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
+
 
     /**
      * Handle the event.
@@ -25,6 +19,7 @@ class EmailUsersAboutOrderCreated implements ShouldQueue
 
         $email = new OrderCreate($order);
 
-        Mail::to($cart->user->email)->later(now()->addSeconds(5), $email);
+        
+        Mail::to($cart->user->email)->queue($email);
     }
 }

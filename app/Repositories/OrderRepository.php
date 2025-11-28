@@ -6,7 +6,7 @@ namespace App\Repositories;
 use App\Models\Order;
 use App\Models\Cart;
 use App\Events\OrderCreated;
-use App\Models\Product;
+use App\Jobs\GenerateInvoicePdf;
 
 class OrderRepository
 {
@@ -50,6 +50,7 @@ class OrderRepository
 
 
         event(new OrderCreated($order, $cart));
+        GenerateInvoicePdf::dispatch($order);
 
         $cart->items()->delete();
 

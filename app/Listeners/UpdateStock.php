@@ -24,8 +24,12 @@ class UpdateStock
         $order = $event->order;
 
         foreach ($order->items as $item) {
-            $products = $item->product;
-            $products->decrement('stock', $item->quantity);
+            $product = $item->product;
+            if ($product->stock >= $item->quantity) {
+                $product->decrement('stock', $item->quantity);
+            } else {
+                throw new \Exception("Insufficient stock for product ID: {$product->id}");
+            }
         }
     }
 }
