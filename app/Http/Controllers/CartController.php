@@ -20,13 +20,13 @@ class CartController extends Controller
     {
         $userId = $request->user()->id;
         $cart = $this->cartService->showCartUser($userId);
-        return new CartResource($cart);
+        return response()->json(new CartResource($cart), 200);
     }
 
     public function clear(Request $request)
     {
         $userId = $request->user()->id;
         $this->cartService->clearUserCart($userId);
-        return response()->json(['message' => 'Cart cleared successfully.']);
+        return response()->json(['message' => 'Cart cleared successfully.'], 200);
     }
 }
