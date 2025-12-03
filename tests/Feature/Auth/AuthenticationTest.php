@@ -10,6 +10,8 @@ class AuthenticationTest extends TestCase
 {
 
     use RefreshDatabase;
+
+    # php artisan test --filter=AuthenticationTest
     public function test_user_pode_registrar()
     {
         $response = $this->postJson('/api/auth/register', [

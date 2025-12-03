@@ -21,7 +21,7 @@ class AddressControllerTest extends TestCase
     }
 
 
-
+    # php artisan test --filter=AddressControllerTest
     public function test_criar_endereco_com_sucesso()
     {
 
@@ -36,6 +36,7 @@ class AddressControllerTest extends TestCase
             'zip_code' => '96854938',
 
         ]);
+        
         $response->assertStatus(201);
     }
 

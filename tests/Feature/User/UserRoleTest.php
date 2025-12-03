@@ -16,6 +16,7 @@ class UserRoleTest extends TestCase
 
 
 
+    # php artisan test --filter=UserRoleTest
 
     public function test_dispara_evento_ao_criar_usuario()
     {

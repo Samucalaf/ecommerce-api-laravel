@@ -17,6 +17,7 @@ class ProductControllerTest extends TestCase
 
     private Product $product;
 
+    # php artisan test --filter=ProductControllerTest
     protected function setUp(): void
     {
         parent::setUp();

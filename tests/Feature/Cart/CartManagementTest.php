@@ -24,6 +24,7 @@ class CartManagementTest extends TestCase
 
     private CartItemRepository $cartItemRepository;
 
+    # php artisan test --filter=CartManagementTest
     protected function setUp(): void
     {
         parent::setUp();

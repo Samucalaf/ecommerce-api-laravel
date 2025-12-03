@@ -27,6 +27,7 @@ class OrderControllerTest extends TestCase
 
     protected  $cartMock;
 
+    # php artisan test --filter=OrderControllerTest
     protected function setUp(): void
     {
         parent::setUp();
