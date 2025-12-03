@@ -33,7 +33,7 @@ class CategoryController extends Controller
 
         $categories = $this->categoryService->listCategories($request->get('per_page', 10));
 
-        return CategoryResource::collection($categories);
+        return response()->json(CategoryResource::collection($categories), 200);
     }
 
     /**
@@ -52,7 +52,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $this->authorize('view', $category);
-        return new CategoryResource($category);
+        return response()->json(new CategoryResource($category), 201);
     }
 
     /**
@@ -60,9 +60,9 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $this->authorize('update', $category);  
+        $this->authorize('update', $category);
         $category = $this->categoryService->updateCategory($category, $request->all());
-        return new CategoryResource($category);
+        return response()->json(new CategoryResource($category), 200);
     }
 
     /**
@@ -70,7 +70,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->authorize('delete', Category::class);    
+        $this->authorize('delete', Category::class);
         $category = $this->categoryService->deleteCategory($id);
 
         if ($category === true) {

@@ -13,7 +13,7 @@ use App\Repositories\CartRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Services\CartItemService;
 
-class CartTest extends TestCase
+class CartManagementTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -68,7 +68,9 @@ class CartTest extends TestCase
     public function test_adiconar_produto_ao_carrinho(){
 
         $user = User::factory()->create();
-        $product = Product::factory()->create();
+        $product = Product::factory()->create([
+            'stock' => 50
+        ]);
         $quantity = 1;
 
         $cartItem = $this->cartItemService->addProductToCart($user->id, $product->id, $quantity);

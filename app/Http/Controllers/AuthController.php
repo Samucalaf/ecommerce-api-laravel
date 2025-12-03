@@ -38,9 +38,14 @@ class AuthController extends Controller
             $token = $user->createToken('auth_token')->plainTextToken;
 
 
-            event( new WelcomeToNewUser($user));
+            event(new WelcomeToNewUser($user));
 
             return new UserResource($user, $token);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => $e->getMessage()
+            ], 422);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Registration failed', 'message' => $e->getMessage()], 500);
         }
@@ -59,7 +64,7 @@ class AuthController extends Controller
             $user = User::where('email', $data['email'])->first();
             $token = $user->createToken('auth_token')->plainTextToken;
 
-           return new UserResource($user, $token);
+            return new UserResource($user, $token);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Login failed', 'message' => $e->getMessage()], 500);
         }

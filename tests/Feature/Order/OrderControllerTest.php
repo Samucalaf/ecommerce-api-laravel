@@ -15,7 +15,7 @@ use App\Models\User;
 use App\Events\OrderCreated;
 use App\Models\Address;
 
-class OrderServiceTest extends TestCase
+class OrderControllerTest extends TestCase
 {
     /**
      * A basic feature test example.
