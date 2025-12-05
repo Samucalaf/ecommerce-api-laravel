@@ -24,7 +24,7 @@ class ProductController extends Controller
     {
         $this->authorize('viewAny', Product::class);
         $searchTerm = $request->query('search');
-    
+
         if ($searchTerm) {
             $products = $this->productService->searchProducts($searchTerm);
             return ProductResource::collection($products);
@@ -69,14 +69,19 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->authorize('delete', Product::class);
-        $product = $this->productService->deleteProduct($id);
-        
-        if ($product === false) {
+
+        $product = $this->productService->getProductById($id);
+
+
+        if (!$product) {
             return response()->json([
-                'message' => 'Product not found',
+                'message' => 'Product not found or cannot be deleted',
             ], 404);
         }
+
+        $this->authorize('delete', $product);
+        
+        $this->productService->deleteProduct($id);
         return response()->json([
             'message' => 'Product deleted successfully',
         ], 200);

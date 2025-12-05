@@ -34,7 +34,9 @@ class AddressRepository
     public function editAddress($id, array $data)
     {
         $address = $this->model->findOrFail($id);
-        return $address->update($data);
+        $address->update($data);
+
+        return $address->fresh();
     }
 
     public function deleteAddress($userId, string $id)

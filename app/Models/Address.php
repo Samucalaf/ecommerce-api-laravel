@@ -15,7 +15,6 @@ class Address extends Model
 
     use SoftDeletes, HasFactory, BelongsTouser;
     protected $fillable = [
-        'user_id',
         'owner',
         'street',
         'number',
@@ -24,8 +23,7 @@ class Address extends Model
         'city',
         'federation_unit',
         'zip_code',
-        'user_id',
-    ];
+        'user_id',];
 
     public function user(): BelongsTo
     {

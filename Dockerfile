@@ -35,6 +35,10 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
+# Instalar Xdebug corretamente
+RUN apt-get update && apt-get install -y autoconf gcc make
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 # Configurar diretório de trabalho
 WORKDIR /var/www
 
